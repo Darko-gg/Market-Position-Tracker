@@ -58,6 +58,64 @@ def view_balance(data):
     print(f"Closed Trades:    {len(data['trade_history'])}")
 
 
+
+def log_buy(data):
+    """
+    Log a new buy position and update the portfolio.
+    """
+    print("\n--- Log a Buy ---")
+
+    market_name = input("Enter market name: ").strip()
+    side = input("Enter side (YES/NO): ").strip().upper()
+
+    if side not in ["YES", "NO"]:
+        print("\nInvaild side. Please enter YES or NO.")
+        return
+    
+    try:
+        entry_price = float(input("Enter entry price (example: 0.45): ").strip())
+        amount_spent = float(input("Enter amount to spend: ").strip())
+    except ValueError:
+        print("\nInvaild number entered. Please try again.")
+        return
+    
+    if entry_price <= 0 or entry_price >= 1:
+        print("\nEntry price must be greater than 0 and less than 1.")
+        return
+    
+    if amount_spent <= 0:
+        print("\nAmount spent must be greater than 0.")
+        return
+    
+    if amount_spent > data["current_balance"]:
+        print("\nNot enough balance for this trade.")
+        return
+    
+    contracts = amount_spent / entry_price
+
+    position = {
+        "market_name": market_name,
+        "side": side,
+        "entry_price": entry_price,
+        "amount_spent": amount_spent,
+        "contracts": contracts,
+        "status": "OPEN"
+    }
+
+    data["open_positions"].append(position)
+    data["current_balance"] -= amount_spent
+    save_portfolio(data)
+
+    print("\nBuy logged successfully.")
+    print(f"Market:         {market_name}")
+    print(f"Side:           {side}")
+    print(f"Entry Price:    ${entry_price:.2f}")
+    print(f"Amount Spent:   ${amount_spent:.2f}")
+    print(f"Contracts:      {contracts:.4f}")
+    print(f"New Balance:    ${data['current_balance']:.2f}")
+
+
+
 def main():
     """
     Main program loop.
@@ -71,7 +129,7 @@ def main():
         if choice == "1":
             view_balance(data)
         elif choice == "2":
-            print("\nLog a buy feature coming soon.")
+            log_buy(data)
         elif choice == "3":
             print("\nLog a sell feature coming soon.")
         elif choice == "4":
