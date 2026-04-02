@@ -116,6 +116,29 @@ def log_buy(data):
 
 
 
+def view_open_positions(data):
+    """
+    Display all currently open positions.
+    """
+    print("\n--- Open Positions ---")
+
+    open_positions = data["open_positions"]
+
+    if not open_positions:
+        print("No open positions found.")
+        return
+    
+    for index, position in enumerate(open_positions, start=1):
+        print(f"\nPosition #{index}")
+        print(f"Market:         {position['market_name']}")
+        print(f"Side:           {position['side']}")
+        print(f"Entry Price:    ${position['entry_price']:.2f}")
+        print(f"Amount Spent:   ${position['amount_spent']:.2f}")
+        print(f"Contracts:      {position['contracts']:.4f}")
+        print(f"Status:         {position['status']}")
+
+
+
 def main():
     """
     Main program loop.
@@ -133,7 +156,7 @@ def main():
         elif choice == "3":
             print("\nLog a sell feature coming soon.")
         elif choice == "4":
-            print("\nView open positions feature coming soon.")
+            view_open_positions(data)
         elif choice == "5":
             print("\nPosition value checker feature coming soon.")
         elif choice == "6":
