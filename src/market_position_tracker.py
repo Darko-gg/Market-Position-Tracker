@@ -138,6 +138,59 @@ def view_open_positions(data):
         print(f"Status:         {position['status']}")
 
 
+def check_position_value(data):
+    """
+    Check current value of an open position without selling it.
+    """
+    print("\n--- Check Position Value ---")
+
+    open_positions = data["open_positions"]
+
+    if not open_positions:
+        print("No open positions available.")
+        return
+    
+    for index, position in enumerate(open_positions, start=1):
+        print(f"{index}. {position['market_name']} ({position['side']})")
+
+    try:
+        selection = int(input("\nSelect a position number: ").strip())
+    except ValueError:
+        print("\nInvaild selection. Please enter a number.")
+        return
+    
+    if selection < 1 or selection > len(open_positions):
+        print("\nSelected position does not exist.")
+        return
+    
+    position = open_positions[selection - 1]
+
+    try:
+        current_price = float(input("Enter current price: ").strip())
+    except ValueError:
+        print("\nInvaild price entered.")
+        return
+    
+    if current_price <= 0 or current_price >= 1:
+        print("\nCurrent price must be greater than 0 and less than 1.")
+        return
+    
+    current_value = position["contracts"] * current_price
+    profit_loss = current_value - position["amount_spent"]
+    return_percent = (profit_loss / position["amount_spent"]) * 100
+
+    print("\n--- Position Value ---")
+    print(f"Market:             {position['market_name']}")
+    print(f"Side:               {position['side']}")
+    print(f"Entry Price:        ${position['entry_price']:.2f}")
+    print(f"Current Price:      ${current_price:2f}")
+    print(f"Amount Spent:       ${position['amount_spent']:.2f}")
+    print(f"Contracts:          {position['contracts']:.4f}")
+    print(f"Current Value:      ${current_value:.2f}")
+    print(f"Unrealized P/L:     ${profit_loss:.2f}")
+    print(f"Return Percentage:  {return_percent:.2f}%")
+
+
 
 def main():
     """
@@ -158,7 +211,7 @@ def main():
         elif choice == "4":
             view_open_positions(data)
         elif choice == "5":
-            print("\nPosition value checker feature coming soon.")
+            check_position_value(data)
         elif choice == "6":
             print("\nTrade history feature coming soon.")
         elif choice == "7":
