@@ -191,6 +191,78 @@ def check_position_value(data):
     print(f"Return Percentage:  {return_percent:.2f}%")
 
 
+def log_sell(data):
+    """
+    Sell an open position, calculate realized profit/loss,
+    move it to trade history, and update balance.
+    """
+    print("\n--- Log a Sell ---")
+
+    open_positions = data["open_positions"]
+
+    if not open_positions:
+        print("No open positions avaliable to sell.")
+        return
+    
+    for index, position in enumerate(open_positions, start=1):
+        print(f"{index}. {position['market_name']} ({position['side']})")
+
+    try:
+        selection = int(input("\nSelect a position number to sell: ").strip())
+    except ValueError:
+        print("\nInvaild selection. Please enter a number.")
+        return
+    
+    if selection < 1 or selection > len(open_positions):
+        print("\nSelected position does not exist.")
+        return
+    
+    position = open_positions[selection - 1]
+
+    try:
+        sell_price = float(input("Enter sell price: ").strip())
+    except ValueError:
+        print("\nInvaild sell price entered.")
+        return
+    
+    if sell_price <= 0 or sell_price >= 1:
+        print("\nSell price must be greater than 0 and less than 1.")
+        return
+    
+    sale_value = position["contracts"] * sell_price
+    profit_loss = sale_value - position["amount_spent"]
+    return_percent = (profit_loss / position["amount_spent"]) * 100
+
+    closed_trade = {
+        "market_name": position["market_name"],
+        "side": position["side"],
+        "entry_price": position["entry_price"],
+        "sell_price": sell_price,
+        "amount_spent": position["amount_spent"],
+        "contracts": position["contracts"],
+        "sale_value": sale_value,
+        "profit_loss": profit_loss,
+        "return_percent": return_percent,
+        "status": "CLOSED"
+    }
+
+    data["current_balance"] += sale_value
+    data["trade_history"].append(closed_trade)
+    data["open_positions"].pop(selection - 1)
+    save_portfolio(data)
+
+    print("\nSell logged successfully.")
+    print(f"Market:             {closed_trade['market_name']}")
+    print(f"side:               {closed_trade['side']}")
+    print(f"Entry Price:        ${closed_trade['entry_price']:.2f}")
+    print(f"Sell Price:         ${closed_trade['sell_price']:.2f}")
+    print(f"Amount Spent:       ${closed_trade['amount_spent']:.2f}")
+    print(f"Sale Value:         ${closed_trade['sale_value']:.2f}")
+    print(f"Realized P/L:       ${closed_trade['profit_loss']:.2f}")
+    print(f"Return Percentage:  {closed_trade['return_percent']:.2f}%")
+    print(f"New Balance:        ${data['current_balance']:.2f}")
+    
+
 
 def main():
     """
@@ -207,7 +279,7 @@ def main():
         elif choice == "2":
             log_buy(data)
         elif choice == "3":
-            print("\nLog a sell feature coming soon.")
+            log_sell(data)
         elif choice == "4":
             view_open_positions(data)
         elif choice == "5":
