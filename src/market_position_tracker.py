@@ -261,7 +261,33 @@ def log_sell(data):
     print(f"Realized P/L:       ${closed_trade['profit_loss']:.2f}")
     print(f"Return Percentage:  {closed_trade['return_percent']:.2f}%")
     print(f"New Balance:        ${data['current_balance']:.2f}")
+
+
+
+def view_trade_history(data):
+    """
+    Display all closed trades from trade history.
+    """
+    print("\n--- Trade History ---")
+
+    trade_history = data["trade_history"]
+
+    if not trade_history:
+        print("No closed trades found.")
+        return
     
+    for index, trade in enumerate(trade_history, start=1):
+        print(f"\nTrade #{index}")
+        print(f"Market:             {trade['market_name']}")
+        print(f"Side:               {trade['side']}")
+        print(f"Entry Price:        ${trade['entry_price']:.2f}")
+        print(f"Sell Price:         ${trade['sell_price']:.2f}")
+        print(f"Amount Spent:       ${trade['amount_spent']:.2f}")
+        print(f"Contracts:          {trade['contracts']:.4f}")
+        print(f"Sale Value:         ${trade['sale_value']:.2f}")
+        print(f"Profit/Loss:        ${trade['profit_loss']:.2f}")
+        print(f"Return Percentage:  {trade['return_percent']:.2f}%")
+        print(f"Status:             {trade['status']}")
 
 
 def main():
@@ -285,7 +311,7 @@ def main():
         elif choice == "5":
             check_position_value(data)
         elif choice == "6":
-            print("\nTrade history feature coming soon.")
+            view_trade_history(data)
         elif choice == "7":
             print("\nReset account feature coming soon.")
         elif choice == "0":
