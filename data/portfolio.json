@@ -1,19 +1,6 @@
 {
     "starting_balance": 20.0,
-    "current_balance": 21.547619047619047,
+    "current_balance": 20.0,
     "open_positions": [],
-    "trade_history": [
-        {
-            "market_name": "Will BTC close above 100k Friday",
-            "side": "YES",
-            "entry_price": 0.42,
-            "sell_price": 0.55,
-            "amount_spent": 5.0,
-            "contracts": 11.904761904761905,
-            "sale_value": 6.547619047619048,
-            "profit_loss": 1.5476190476190483,
-            "return_percent": 30.952380952380963,
-            "status": "CLOSED"
-        }
-    ]
+    "trade_history": []
 }

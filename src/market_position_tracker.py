@@ -290,6 +290,27 @@ def view_trade_history(data):
         print(f"Status:             {trade['status']}")
 
 
+
+def reset_account(data):
+    """
+    Reset the portfolio back to its default starting state.
+    """
+    print("\n--- Reset Account ---")
+    confirm = input("Are you sure you want to reset everything (YES to confirm): ").strip().upper()
+
+    if confirm != "YES":
+        print("\nReset canceled.")
+        return
+    
+    data["starting_balance"] = 20.0
+    data["current_balance"] = 20.0
+    data["open_positions"].clear()
+    data["trade_history"].clear()
+
+    save_portfolio(data)
+    print("\nAccount has been reset to the default state.")
+
+
 def main():
     """
     Main program loop.
@@ -313,7 +334,7 @@ def main():
         elif choice == "6":
             view_trade_history(data)
         elif choice == "7":
-            print("\nReset account feature coming soon.")
+            reset_account(data)
         elif choice == "0":
             print("]\nExiting Market Position Tracker.")
             break
