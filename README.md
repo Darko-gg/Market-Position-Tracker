@@ -8,7 +8,3 @@ A simple Python CLI program for simulating manual trades on binary prediction-st
 - View open positions
 - Calculate profit and loss
 - Save progress to a JSON file
-
-## Tech Stack
-- Python
-- JSON for local data storage
